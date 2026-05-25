@@ -9,3 +9,11 @@ A **Pod** is the smallest deployable unit of computing that you can create and m
 
 ### My Learning Objective
 Understand how to define single and multi-container Pods using YAML manifests and manage them via `kubectl`.
+
+### 🚀 Lab 01: First Pod Deployment Summary
+
+* **Pod Name**: `my-first-nginx`
+* **Status**: Successfully running (`1/1 Running`)
+* **Allocated Cluster IP**: `10.42.0.5`
+* **Verification**: Executed `curl http://10.42.0.5` from the host machine. Successfully received HTTP `200 OK` with the Nginx welcome page.
+* **Logs**: Inspected using `kubectl logs my-first-nginx`, which confirmed the container started cleanly and captured the inbound `curl` request.
