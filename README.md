@@ -60,7 +60,7 @@ Existing self-hosted stack already includes:
 - [x] Repository initialization
 - [x] Infrastructure planning
 - [ ] Docker workload cleanup
-- [ ] Install k3s
+- [x] Install k3s
 - [ ] First Kubernetes deployment
 - [ ] Configure ingress
 - [ ] Monitoring migration
