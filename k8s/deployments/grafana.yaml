@@ -1,0 +1,61 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: grafana-pvc
+  namespace: default
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: local-path # Nutzt den standardmäßigen K3s-Speicheranbieter
+  resources:
+    requests:
+      storage: 2Gi # Reserviert 2 Gigabyte Speicherplatz für Grafana-Datenbank und Dashboards
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: grafana-deployment
+  namespace: default
+  labels:
+    app: grafana
+spec:
+  replicas: 1 # Genau eine Instanz von Grafana ausführen
+  selector:
+    matchLabels:
+      app: grafana
+  template:
+    metadata:
+      labels:
+        app: grafana
+    spec:
+      containers:
+      - name: grafana-container
+        image: grafana/grafana-oss:latest # Offizielles Grafana Open-Source Image
+        ports:
+        - containerPort: 3000
+          name: grafana-port
+        env:
+        - name: GF_SECURITY_ALLOW_EMBEDDING
+          value: "true" # Erlaubt das Einbetten von Dashboards (falls benötigt)
+        volumeMounts:
+        - name: grafana-data
+          mountPath: /var/lib/grafana # Interner Pfad für Plugins und Dashboards
+      volumes:
+      - name: grafana-data
+        persistentVolumeClaim:
+          claimName: grafana-pvc # Verknüpfung mit dem oben definierten Speicherplatz
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: grafana-service
+  namespace: default
+spec:
+  type: NodePort # Öffnet einen festen Port auf dem Host-System für Nginx
+  ports:
+  - port: 3000
+    targetPort: 3000
+    nodePort: 32000 # Externer Nginx leitet den Traffic an diesen Port weiter
+    protocol: TCP
+  selector:
+    app: grafana
