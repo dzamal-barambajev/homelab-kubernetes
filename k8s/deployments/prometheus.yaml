@@ -48,7 +48,7 @@ spec:
       volumes:
       - name: prometheus-config
         hostPath:
-          path: /mnt/storage/monitoring/prometheus/prometheus.yml # Pfad zu deiner aktuellen Docker-Config
+          path: /home/vpnuser/monitoring/prometheus/prometheus.yml # Korrigierter Pfad zur Docker-Konfigurationsdatei
       - name: prometheus-data
         persistentVolumeClaim:
           claimName: prometheus-pvc
