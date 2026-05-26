@@ -41,14 +41,13 @@ spec:
           name: prom-port
         volumeMounts:
         - name: prometheus-config
-          mountPath: /etc/prometheus/prometheus.yml
-          subPath: prometheus.yml # Verknüpft die bestehende Konfigurationsdatei
+          mountPath: /etc/prometheus # Interner Pfad für die Konfigurationsdateien
         - name: prometheus-data
           mountPath: /prometheus # Interner Pfad für die TSDB-Metriken
       volumes:
       - name: prometheus-config
-        hostPath:
-          path: /home/vpnuser/monitoring/prometheus/prometheus.yml # Korrigierter Pfad zur Docker-Konfigurationsdatei
+        configMap:
+          name: prometheus-config # Nutzt die intern im Cluster gespeicherte ConfigMap
       - name: prometheus-data
         persistentVolumeClaim:
           claimName: prometheus-pvc
