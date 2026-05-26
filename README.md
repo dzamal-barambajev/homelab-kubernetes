@@ -63,7 +63,7 @@ Der bestehende Self-Hosted-Stack umfasst bereits:
 - [x] K3s-Installation
 - [ ] Erstes Kubernetes-Deployment
 - [ ] Ingress-Konfiguration
-- [ ] Migration des Monitorings
+- [x] Migration des Monitorings
 - [ ] Einrichtung von persistentem Speicher
 - [ ] CI/CD-Experimente
 
@@ -102,3 +102,21 @@ Der bestehende Self-Hosted-Stack umfasst bereits:
 ## 📝 Notizen
 
 Dieses Repository repräsentiert ein sich ständig weiterentwickelndes Homelab und eine Lernumgebung, einschließlich Experimenten, Fehlerbehebungen (Troubleshooting), Migrationsschritten und Infrastruktur-Verbesserungen.
+
+
+---
+
+## 📑 Meilenstein: Erfolgreiche Migration von Uptime Kuma
+
+**Status:** Aktiv im K3s-Cluster (`uptime-kuma-deployment` läuft stabil)
+
+Um die Migration transparent zu dokumentieren, wurden folgende Schritte durchgeführt:
+
+1. **Infrastruktur-as-Code:** Das Manifest `k8s/deployments/uptime-kuma.yaml` wurde erstellt. Es kapselt ein `Deployment` (1 Replica), einen `Service` (festgelegt auf NodePort `32001`) und einen `PersistentVolumeClaim` (2Gi über den K3s `local-path` Provider) [🔍].
+2. **Stateful-Datenmigration:** 
+   * Der K3s-Replica-Satz wurde temporär auf `0` herunterskaliert, um Schreibzugriffe zu blockieren.
+   * Die bestehende SQLite-Datenbank (`kuma.db`) wurde mit dem Befehl `cp -a` unter Beibehaltung aller Berechtigungen aus dem alten Docker-Volume in das persistente K3s-Verzeichnis (`/var/lib/rancher/k3s/storage/`) migriert [🔍].
+   * Nach dem Upscaling auf `1` wurden alle historischen Statistiken, Monitore und Benutzerdaten erfolgreich im Cluster wiederhergestellt [🔍].
+3. **Nginx-Routing & Bereinigung:** 
+   * Der externe Reverse Proxy wurde so konfiguriert, dass er HTTP-Traffic intern an den NodePort `32001` weiterleitet.
+   * Der alte, redundante Docker-Container `uptime-kuma` wurde gestoppt und vollständig vom Server entfernt, um RAM-Ressourcen freizugeben.
