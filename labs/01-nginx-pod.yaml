@@ -2,12 +2,12 @@ apiVersion: v1
 kind: Pod
 metadata:
   name: my-first-nginx
-  namespace: default
+  namespace: default # Der Standard-Namensraum für Benutzeranwendungen
   labels:
-    app: web-test
+    app: web-test # Label zur Identifikation und Verknüpfung des Pods
 spec:
   containers:
   - name: nginx-container
-    image: nginx:alpine
+    image: nginx:alpine # Leichtgewichtiges offizielles Nginx-Image auf Alpine-Basis
     ports:
-    - containerPort: 80
+    - containerPort: 80 # Der Port, den der Webserver innerhalb des Containers öffnet
