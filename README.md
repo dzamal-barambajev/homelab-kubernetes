@@ -9,26 +9,25 @@
 
 ---
 
-## Overview
+## 📋 Übersicht
 
-This repository documents my journey of migrating a self-hosted infrastructure
-from standalone Docker workloads to a lightweight Kubernetes (k3s) environment.
+Dieses Repository dokumentiert meinen Weg bei der Migration einer Self-Hosted-Infrastruktur von eigenständigen Docker-Workloads zu einer leichtgewichtigen Kubernetes-Umgebung (k3s).
 
-The goal is to gain practical experience with:
+Das Ziel ist es, praktische Erfahrung in folgenden Bereichen zu sammeln:
 
-- Kubernetes fundamentals
-- Container orchestration
-- Infrastructure monitoring
-- Ingress networking
-- Observability
-- Automation workflows
-- Production-style infrastructure management
+- Kubernetes-Grundlagen
+- Container-Orchestrierung
+- Infrastruktur-Monitoring
+- Ingress-Networking
+- Observability (Überwachung)
+- Automatisierungs-Workflows
+- Produktionsnahes Infrastruktur-Management
 
 ---
 
-## Current Infrastructure
+## 🛠️ Aktuelle Infrastruktur
 
-Existing self-hosted stack already includes:
+Der bestehende Self-Hosted-Stack umfasst bereits:
 
 - Ubuntu VPS
 - Docker
@@ -41,35 +40,36 @@ Existing self-hosted stack already includes:
 
 ---
 
-## Planned Kubernetes Stack
+## ⎈ Geplanter Kubernetes-Stack
 
-| Component | Purpose |
+
+| Komponente | Zweck |
 |---|---|
-| k3s | Lightweight Kubernetes |
-| ingress-nginx | Reverse proxy and ingress |
-| Prometheus | Metrics collection |
-| Grafana | Dashboards and observability |
-| Persistent Volumes | Stateful storage |
-| Deployments | Workload orchestration |
-| Services | Internal networking |
+| k3s | Leichtgewichtiges Kubernetes |
+| ingress-nginx | Reverse Proxy und Ingress-Routing |
+| Prometheus | Metrik-Erfassung |
+| Grafana | Dashboards und Visualisierung |
+| Persistent Volumes | Persistenter Speicher für Stateful-Dienste |
+| Deployments | Workload-Orchestrierung |
+| Services | Internes Netzwerk-Routing |
 
 ---
 
-## Migration Progress
+## ⏳ Migrationsfortschritt
 
-- [x] Repository initialization
-- [x] Infrastructure planning
-- [ ] Docker workload cleanup
-- [x] Install k3s
-- [ ] First Kubernetes deployment
-- [ ] Configure ingress
-- [ ] Monitoring migration
-- [ ] Persistent storage setup
-- [ ] CI/CD experiments
+- [x] Repository-Initialisierung
+- [x] Infrastruktur-Planung
+- [ ] Bereinigung der Docker-Workloads
+- [x] K3s-Installation
+- [ ] Erstes Kubernetes-Deployment
+- [ ] Ingress-Konfiguration
+- [ ] Migration des Monitorings
+- [ ] Einrichtung von persistentem Speicher
+- [ ] CI/CD-Experimente
 
 ---
 
-## Repository Structure
+## 📂 Repository-Struktur
 
 ```text
 .
@@ -87,19 +87,18 @@ Existing self-hosted stack already includes:
 
 ---
 
-## Current Focus
+## 🎯 Aktueller Fokus
 
-- Kubernetes fundamentals
-- Infrastructure organization
-- Monitoring and automation
-- Reverse proxy networking
-- Real-world DevOps workflows
-- Infrastructure observability
-- Container orchestration
+- Kubernetes-Grundlagen
+- Infrastruktur-Organisation
+- Monitoring und Automatisierung
+- Reverse-Proxy-Networking
+- Praxisnahe DevOps-Workflows
+- Infrastruktur-Observability
+- Container-Orchestrierung
 
 ---
 
-## Notes
+## 📝 Notizen
 
-This repository represents an evolving homelab and learning environment,
-including experiments, troubleshooting, migration steps and infrastructure improvements.
+Dieses Repository repräsentiert ein sich ständig weiterentwickelndes Homelab und eine Lernumgebung, einschließlich Experimenten, Fehlerbehebungen (Troubleshooting), Migrationsschritten und Infrastruktur-Verbesserungen.
