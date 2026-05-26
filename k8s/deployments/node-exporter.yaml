@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: node-exporter
+  namespace: default
+  labels:
+    app: node-exporter
+spec:
+  selector:
+    matchLabels:
+      app: node-exporter
+  template:
+    metadata:
+      labels:
+        app: node-exporter
+    spec:
+      hostNetwork: true # Erlaubt dem Pod den direkten Zugriff на das Netzwerk des VPS-Hosts
+      hostPID: true     # Ermöglicht das Auslesen der exakten Prozessstatistiken des Hosts
+      hostIPC: true
+      containers:
+      - name: node-exporter
+        image: prom/node-exporter:latest # Offizielles Node-Exporter Image
+        securityContext:
+          privileged: true # Erforderlich für das Lesen der Kernel-Metriken von Linux
+        ports:
+        - containerPort: 9100
+          hostPort: 9100 # Öffnet den Port 9100 lokal auf dem eigentlichen Server
+          name: scrape
+        volumeMounts:
+        - name: proc
+          mountPath: /host/proc
+          readOnly: true
+        - name: sys
+          mountPath: /host/sys
+          readOnly: true
+        - name: root
+          mountPath: /rootfs
+          readOnly: true
+      volumes:
+      - name: proc
+        hostPath:
+          path: /proc # Mountet das Linux-Prozessverzeichnis des Hosts
+      - name: sys
+        hostPath:
+          path: /sys  # Mountet das Sysfs-Verzeichnis des Hosts für Hardware-Metriken
+      - name: root
+        hostPath:
+          path: /     # Ermöglicht die Überwachung der Festplattenbelegung des Hauptsystems
