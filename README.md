@@ -57,32 +57,41 @@ Der bestehende Self-Hosted-Stack umfasst bereits:
 
 ## ⏳ Migrationsfortschritt
 
+## ⏳ Migrationsfortschritt
+
 - [x] Repository-Initialisierung
 - [x] Infrastruktur-Planung
-- [ ] Bereinigung der Docker-Workloads
 - [x] K3s-Installation
-- [ ] Erstes Kubernetes-Deployment
-- [ ] Ingress-Konfiguration
-- [x] Migration des Monitorings
-- [ ] Einrichtung von persistentem Speicher
+- [x] Erste Kubernetes-Deployments
+- [x] Prometheus-Monitoring im Cluster
+- [x] Grafana-Monitoring im Cluster
+- [x] Node Exporter für Host-Metriken
+- [x] Migration von Uptime Kuma
+- [x] Persistent Volume Claims (PVC)
+- [x] NodePort-Service-Konfiguration
+- [x] Reverse-Proxy-Weiterleitung über Nginx
+- [ ] Vollständige Bereinigung alter Docker-Workloads
+- [ ] Kubernetes Ingress Controller
+- [ ] Loki-Logging-Stack
+- [ ] ELK/OpenSearch-Experimente
 - [ ] CI/CD-Experimente
-
 ---
 
 ## 📂 Repository-Struktur
 
 ```text
 .
-├── docs/
-├── diagrams/
-├── screenshots/
-├── scripts/
-└── k8s/
-    ├── deployments/
-    ├── services/
-    ├── ingress/
-    ├── monitoring/
-    └── storage/
+├── README.md
+├── k8s
+│   └── deployments
+│       ├── grafana.yaml
+│       ├── node-exporter.yaml
+│       ├── prometheus.yaml
+│       └── uptime-kuma.yaml
+├── labs
+│   └── 01-nginx-pod.yaml
+└── theory-notes
+    └── 01-pods-concepts.md
 ```
 
 ---
@@ -120,3 +129,71 @@ Um die Migration transparent zu dokumentieren, wurden folgende Schritte durchgef
 3. **Nginx-Routing & Bereinigung:** 
    * Der externe Reverse Proxy wurde so konfiguriert, dass er HTTP-Traffic intern an den NodePort `32001` weiterleitet.
    * Der alte, redundante Docker-Container `uptime-kuma` wurde gestoppt und vollständig vom Server entfernt, um RAM-Ressourcen freizugeben.
+
+---
+
+# 📡 Current Monitoring Architecture
+
+> Self-hosted monitoring and observability stack running behind Xray VPN and Nginx reverse proxy.
+
+## 🌐 Traffic Flow
+
+```text
+                Internet
+                    │
+                    ▼
+        ┌─────────────────────┐
+        │  Xray VPN Gateway   │
+        │       :443          │
+        └─────────────────────┘
+                    │
+                    ▼
+        ┌─────────────────────┐
+        │ Nginx Reverse Proxy │
+        │ localhost:8443      │
+        └─────────────────────┘
+                    │
+                    ▼
+        ┌─────────────────────┐
+        │   K3s Kubernetes    │
+        └─────────────────────┘
+           │      │      │
+           ▼      ▼      ▼
+      Grafana  Prometheus  Kuma
+                    │
+                    ▼
+             Node Exporter
+```
+
+---
+
+## 🚀 Active Monitoring Components
+
+| Service | Purpose | Status | Platform |
+|---|---|---|---|
+| Grafana | Visualization & Dashboards | 🟢 Active | Kubernetes |
+| Prometheus | Metrics Collection | 🟢 Active | Kubernetes |
+| Node Exporter | Host Metrics | 🟢 Active | Kubernetes |
+| Uptime Kuma | Availability Monitoring | 🟢 Active | Kubernetes |
+| Docker Legacy Stack | Transitional Services | 🟡 Partial | Docker |
+
+---
+
+## 🔐 Network Design
+
+- Only ports **22**, **80** and **443** are externally exposed
+- Xray acts as the main TLS/VPN entrypoint
+- Nginx performs internal reverse proxy routing
+- Kubernetes services are exposed through NodePorts
+- Internal services remain isolated from the public internet
+
+---
+
+## 📈 Current Infrastructure Goals
+
+- Kubernetes migration
+- Infrastructure observability
+- Monitoring centralization
+- Logging stack integration
+- Reverse proxy segmentation
+- Production-style homelab architecture
