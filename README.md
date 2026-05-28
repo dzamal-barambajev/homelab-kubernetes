@@ -171,3 +171,5 @@ Xray fungiert als zentraler VPN- und TLS-Einstiegspunkt
 Nginx übernimmt das interne Reverse-Proxy-Routing
 Kubernetes-Dienste werden intern über NodePorts bereitgestellt
 Interne Services bleiben vom öffentlichen Internet isoliert
+
+- [x] [Milestone: Kubernetes Dashboard Web-GUI Integration & Nginx Routing](./labs/02-kubernetes-dashboard-routing.md)
