@@ -10,7 +10,28 @@ Dieses Dokument beschreibt die Integration der offiziellen **Kubernetes Dashboar
 ### 🌐 Traffic-Flow (Inbound)
 Der Datenverkehr für administrative Zugriffe erfolgt über eine mehrstufige Proxy-Kette zur maximalen Absicherung der Host-Ports:
 
-Internet (Browser)│▼┌───────────────────────┐│    Xray VPN Gateway   ││         :443          │└───────────────────────┘│ (Lokale Schleife)▼┌───────────────────────┐│  Nginx Reverse Proxy  ││    localhost:8443     │└───────────────────────┘│ (NodePort 32080)▼┌───────────────────────┐│ Ingress-Nginx (k3s)   ││   Cluster-Routing     │└───────────────────────┘│▼┌───────────────────────┐│  K8s Dashboard Pod    │└───────────────────────┘
+
+               🌐  Internet (Browser)
+                       │
+                       ▼
+           ┌───────────────────────┐
+           │ 🕳️  Xray VPN Gateway  │  <── Inbound-Port :443
+           └───────────────────────┘
+                       │ (🔄 Lokale Schleife)
+                       ▼
+           ┌───────────────────────┐
+           │ 🚀  Nginx Proxy Server│  <── Interner Port :8443
+           └───────────────────────┘
+                       │ (🪵 NodePort 32080)
+                       ▼
+           ┌───────────────────────┐
+           │ ⎈   Ingress-Nginx K3s │  <── Cluster-Router
+           └───────────────────────┘
+                       │
+                       ▼
+           ┌───────────────────────┐
+           │ 📊  K8s Dashboard Pod │  <── Ziel-Web-GUI
+           └───────────────────────┘
 
 ---
 
@@ -42,7 +63,7 @@ spec:
 ```
 
 ### 2. Host-Sicherheit (iptables-Bereinigung)
-Um unbefugte externe Scans auf die NodePorts` blockieren, wurde die Host-Firewall analysiert. Es wurde festgestellt, dass k3s-interne Module (Accounting via `nfacct-name localhost_nps_accepted_pkts`) den Traffic bereits standardmäßig auf `127.0.0.0/8` einschränken. Redundante, blockierende `INPUT`-Regeln, die einen `404 Not Found` Fehler erzeugten, wurden успешно через `iptables -D INPUT` беренигт.
+Um unbefugte externe Scans auf die NodePorts` blockieren, wurde die Host-Firewall analysiert. Es wurde festgestellt, dass k3s-interne Module (Accounting via `nfacct-name localhost_nps_accepted_pkts`) den Traffic bereits standardmäßig auf `127.0.0.0/8` einschränken. Redundante, blockierende `INPUT`-Regeln, die einen `404 Not Found` Fehler erzeugten, wurden erfolgreich mit `iptables -D INPUT` bereinigt.
 
 ### 3. Nginx Global Default Server & SSL-Terminierung
 Um Host-Header-Konflikte (bedingt durch Port-Anhänge wie `:8443` im Browser-Request) zu vermeiden, wurde das Routing in einen dedizierten `default_server` auf Port `8443` überführt. Hierbei erfolgt eine saubere SSL-Validierung mittels Let's Encrypt Wildcard-Zertifikaten für die Subdomäne.
@@ -53,8 +74,8 @@ server {
     listen 8443 default_server ssl http2;
     server_name _;
 
-    ssl_certificate /etc/letsencrypt/live/://netzvirtuell.com;
-    ssl_certificate_key /etc/letsencrypt/live/://netzvirtuell.com;
+    ssl_certificate /etc/letsencrypt/live/example.com;
+    ssl_certificate_key /etc/letsencrypt/live/example.com;
 
     location / {
         proxy_set_header Host \$host;
@@ -96,4 +117,4 @@ Zur Steigerung der Usability im Homelab wurde die Authentifizierung optimiert. S
    ```
 
 ## 🎯 Ergebnis
-Die Weboberfläche ist nun nativ und voll verschlüsselt unter `https://netzvirtuell.com` erreichbar. Der Zugriff erfolgt per Ein-Klick-Verfahren ("Skip"), während das Cluster im Hintergrund absolut isoliert und geschützt bleibt.
+Die Weboberfläche ist nun nativ und voll verschlüsselt unter `https://forexample.network.com` erreichbar. Der Zugriff erfolgt per Ein-Klick-Verfahren ("Skip"), während das Cluster im Hintergrund absolut isoliert und geschützt bleibt.
