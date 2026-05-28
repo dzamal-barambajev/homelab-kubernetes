@@ -6,6 +6,7 @@
 ![Prometheus](https://img.shields.io/badge/Prometheus-Metrics-orange?logo=prometheus)
 ![Linux](https://img.shields.io/badge/Linux-Ubuntu-black?logo=linux)
 ![Nginx](https://img.shields.io/badge/Nginx-Reverse_Proxy-green?logo=nginx)
+![Ansible](https://img.shields.io/badge/Ansible-Automation-CC0000?logo=ansible)
 
 ---
 
@@ -57,8 +58,6 @@ Der bestehende Self-Hosted-Stack umfasst bereits:
 
 ## ⏳ Migrationsfortschritt
 
-## ⏳ Migrationsfortschritt
-
 - [x] Repository-Initialisierung
 - [x] Infrastruktur-Planung
 - [x] K3s-Installation
@@ -96,18 +95,6 @@ Der bestehende Self-Hosted-Stack umfasst bereits:
 
 ---
 
-## 🎯 Aktueller Fokus
-
-- Kubernetes-Grundlagen
-- Infrastruktur-Organisation
-- Monitoring und Automatisierung
-- Reverse-Proxy-Networking
-- Praxisnahe DevOps-Workflows
-- Infrastruktur-Observability
-- Container-Orchestrierung
-
----
-
 ## 📝 Notizen
 
 Dieses Repository repräsentiert ein sich ständig weiterentwickelndes Homelab und eine Lernumgebung, einschließlich Experimenten, Fehlerbehebungen (Troubleshooting), Migrationsschritten und Infrastruktur-Verbesserungen.
@@ -132,19 +119,19 @@ Um die Migration transparent zu dokumentieren, wurden folgende Schritte durchgef
 
 ---
 
-# 📡 Current Monitoring Architecture
+# 📡 Aktuelle Monitoring-Architektur
 
-> Self-hosted monitoring and observability stack running behind Xray VPN and Nginx reverse proxy.
+> Self-Hosted Monitoring- und Observability-Stack hinter Xray VPN und Nginx Reverse Proxy.
 
-## 🌐 Traffic Flow
+## 🌐 Traffic-Flow
 
 ```text
                 Internet
                     │
                     ▼
         ┌─────────────────────┐
-        │  Xray VPN Gateway   │
-        │       :443          │
+        │   Xray VPN Gateway  │
+        │        :443         │
         └─────────────────────┘
                     │
                     ▼
@@ -159,41 +146,28 @@ Um die Migration transparent zu dokumentieren, wurden folgende Schritte durchgef
         └─────────────────────┘
            │      │      │
            ▼      ▼      ▼
-      Grafana  Prometheus  Kuma
+       Grafana Prometheus Kuma
                     │
                     ▼
-             Node Exporter
+              Node Exporter
 ```
 
 ---
 
-## 🚀 Active Monitoring Components
+| Dienst              | Zweck                       | Status             | Plattform  |
+| ------------------- | --------------------------- | ------------------ | ---------- |
+| Grafana             | Visualisierung & Dashboards | 🟢 Aktiv           | Kubernetes |
+| Prometheus          | Metrik-Erfassung            | 🟢 Aktiv           | Kubernetes |
+| Node Exporter       | Host-Systemmetriken         | 🟢 Aktiv           | Kubernetes |
+| Uptime Kuma         | Verfügbarkeits-Monitoring   | 🟢 Aktiv           | Kubernetes |
+| Legacy Docker Stack | Übergangsservices           | 🟡 Teilweise aktiv | Docker     |
 
-| Service | Purpose | Status | Platform |
-|---|---|---|---|
-| Grafana | Visualization & Dashboards | 🟢 Active | Kubernetes |
-| Prometheus | Metrics Collection | 🟢 Active | Kubernetes |
-| Node Exporter | Host Metrics | 🟢 Active | Kubernetes |
-| Uptime Kuma | Availability Monitoring | 🟢 Active | Kubernetes |
-| Docker Legacy Stack | Transitional Services | 🟡 Partial | Docker |
-
----
-
-## 🔐 Network Design
-
-- Only ports **22**, **80** and **443** are externally exposed
-- Xray acts as the main TLS/VPN entrypoint
-- Nginx performs internal reverse proxy routing
-- Kubernetes services are exposed through NodePorts
-- Internal services remain isolated from the public internet
 
 ---
 
-## 📈 Current Infrastructure Goals
-
-- Kubernetes migration
-- Infrastructure observability
-- Monitoring centralization
-- Logging stack integration
-- Reverse proxy segmentation
-- Production-style homelab architecture
+## 🔐 Netzwerkdesign
+Extern sind ausschließlich die Ports 22, 80 und 443 erreichbar
+Xray fungiert als zentraler VPN- und TLS-Einstiegspunkt
+Nginx übernimmt das interne Reverse-Proxy-Routing
+Kubernetes-Dienste werden intern über NodePorts bereitgestellt
+Interne Services bleiben vom öffentlichen Internet isoliert
